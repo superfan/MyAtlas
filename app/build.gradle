@@ -81,7 +81,9 @@ dependencies {
     compile 'com.taobao.android:atlasupdate:1.1.4@aar'
     compile 'com.alibaba:fastjson:1.1.45.android@jar'
 
-    compile("com.sh3h.android:mylibrary:1.0.2@awb")
+    //compile("com.sh3h.android:mylibrary:1.0.2@awb")
+
+    bundleCompile project(':remotebundle')
 }
 
 String getEnvValue(key, defValue) {
@@ -99,5 +101,24 @@ String getEnvValue(key, defValue) {
 tasks.whenTaskAdded { task ->
     if (task.name.contains("DebugAndroidTest")) {
         task.setEnabled(false);
+    }
+}
+
+
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact "${project.buildDir}/outputs/apk/${project.name}-debug.ap"
+            artifactId "AP-debug"
+        }
     }
 }
